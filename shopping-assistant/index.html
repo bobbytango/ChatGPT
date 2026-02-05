@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Session Assistant</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <h1>Shopping Session Assistant</h1>
+        <p class="tagline">Plan, track, and stretch your grocery budget in real time.</p>
+      </header>
+
+      <main class="app-content">
+        <section class="widget setup-widget" aria-labelledby="setup-heading">
+          <h2 id="setup-heading">Start a shopping session</h2>
+          <form id="setup-form" class="setup-form">
+            <div class="field">
+              <label for="budget-input">Total budget</label>
+              <div class="currency-input">
+                <span aria-hidden="true">$</span>
+                <input
+                  id="budget-input"
+                  name="budget"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  required
+                  placeholder="e.g. 75"
+                />
+              </div>
+              <p class="hint">Enter the amount you are willing to spend for this trip.</p>
+            </div>
+
+            <div class="field">
+              <label for="items-input">Shopping list</label>
+              <textarea
+                id="items-input"
+                name="items"
+                rows="3"
+                placeholder="milk, eggs, bread"
+              ></textarea>
+              <p class="hint">Separate items with commas. You can always add or remove items later.</p>
+            </div>
+
+            <button type="submit" class="primary-button">Start session</button>
+          </form>
+        </section>
+
+        <section class="session" id="session" hidden>
+          <div class="session-grid">
+            <section class="widget budget-widget" aria-labelledby="budget-heading">
+              <div class="budget-header">
+                <h2 id="budget-heading">Budget overview</h2>
+                <button type="button" class="ghost-button" id="reset-session" aria-label="Reset session">
+                  Reset
+                </button>
+              </div>
+              <div class="budget-display" role="status" aria-live="polite">
+                <div class="budget-value">
+                  <span class="label">Total budget</span>
+                  <span class="value" id="budget-total">$0.00</span>
+                </div>
+                <div class="budget-value">
+                  <span class="label">Spent so far</span>
+                  <span class="value" id="budget-spent">$0.00</span>
+                </div>
+                <div class="budget-value">
+                  <span class="label">Remaining</span>
+                  <span class="value" id="budget-remaining">$0.00</span>
+                </div>
+              </div>
+              <div class="budget-alert" id="budget-alert" role="alert"></div>
+            </section>
+
+            <section class="widget add-item-widget" aria-labelledby="add-item-heading">
+              <h2 id="add-item-heading">Add an item</h2>
+              <form id="add-item-form" class="inline-form">
+                <label class="visually-hidden" for="new-item-input">Item name</label>
+                <input
+                  id="new-item-input"
+                  type="text"
+                  placeholder="Add another item"
+                  autocomplete="off"
+                  required
+                />
+                <button type="submit" class="primary-button">Add item</button>
+              </form>
+            </section>
+          </div>
+
+          <section class="widget list-widget" aria-labelledby="list-heading">
+            <div class="list-header">
+              <h2 id="list-heading">Shopping list</h2>
+              <div class="list-summary">
+                <span id="items-remaining">0 pending</span>
+                <span aria-hidden="true">•</span>
+                <span id="items-purchased">0 purchased</span>
+              </div>
+            </div>
+            <ul id="item-list" class="item-list" aria-live="polite"></ul>
+            <p class="empty-state" id="empty-state">No items yet. Add something above to get started.</p>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="price-dialog" id="price-dialog" role="dialog" aria-modal="true" aria-labelledby="price-dialog-title" hidden>
+      <div class="price-dialog__content">
+        <h2 id="price-dialog-title">Enter item price</h2>
+        <p id="price-dialog-item" class="price-dialog__item"></p>
+        <form id="price-form" class="price-form">
+          <label for="price-input">Price</label>
+          <div class="currency-input">
+            <span aria-hidden="true">$</span>
+            <input id="price-input" type="number" min="0" step="0.01" required />
+          </div>
+          <div class="dialog-buttons">
+            <button type="submit" class="primary-button">Save price</button>
+            <button type="button" class="ghost-button" id="cancel-price">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div class="price-dialog__backdrop" id="dialog-backdrop"></div>
+    </div>
+
+    <template id="item-template">
+      <li class="item" data-id="">
+        <div class="item-main">
+          <div class="item-info">
+            <h3 class="item-name"></h3>
+            <div class="item-meta">
+              <span class="item-status"></span>
+              <span class="item-price" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button type="button" class="ghost-button action-buy">Mark bought</button>
+            <button type="button" class="ghost-button action-update">Update price</button>
+            <button type="button" class="ghost-button action-undo">Undo</button>
+            <button type="button" class="ghost-button action-remove" aria-label="Remove item">Remove</button>
+          </div>
+        </div>
+      </li>
+    </template>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
